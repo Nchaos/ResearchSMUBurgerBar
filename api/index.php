@@ -164,7 +164,6 @@ $app->get('/getLastOrder/:userID', function ($id) { //currently untested
     //get list of burgers in the most recent order and create list of components of each burger
     $burgerSet=array();
     $burgerList=$mysqli->query("SELECT idBurger FROM Burger Where BurgerOrder_idOrder = '".$largestID['idOrder']."'");
-    echo "hello thar";
     while(true){
         $burger=$burgerList->fetch_assoc();
         
@@ -178,7 +177,6 @@ $app->get('/getLastOrder/:userID', function ($id) { //currently untested
             $comp = $compList->fetch_assoc();
             if($comp===NULL)
                 break;
-            echo "bout to break";
             echo "(".$comp['BurgerComponent_idBurgerComponent'].")";
            array_push($burgerSubset, $comp['BurgerComponent_idBurgerComponent']);
         }
@@ -198,8 +196,8 @@ $app->post('/createUserAccount', function () {
     $lName = $_POST['lName'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $CCprovider = $_POST['CCprovider'];
-    $CCNumber = $_POST['CCNumber'];
+    $CCprovider = $_POST['ccProvider'];
+    $CCNumber = $_POST['ccNumber'];
     if($fName === "" || $lName === "" || $email === "" || $password === "" || $CCprovider === "" || $CCNumber === "")
 	$outputJSON = array ('u_id'=>-2);
     else{
@@ -227,7 +225,7 @@ $app->post('/createUserAccount', function () {
 });
 
 $app->post('/loginUser', function () {
-    $dummyJSON = array ('status'=>"Success", "user_id"=>1,"fName"=>"Austin","lName"=>"Wells","CCnum"=>1234,"CCprovider"=>"Visa");
+    $dummyJSON = array ('status'=>"Success", "idUser"=>1,"fName"=>"Austin","lName"=>"Wells","ccNumber"=>1234,"ccProvider"=>"Visa");
     $email = $_POST['email'];
     $password = $_POST['password'];
     echo json_encode($dummyJSON);
@@ -239,8 +237,8 @@ $app->post('/placeUserOrder', function () {
     $userID = $_POST['userID'];
     $fName = $_POST['fName'];
     $lName = $_POST['lName'];
-    $CCprovider = $_POST['CCprovider'];
-    $CCNumber = $_POST['CCNumber'];
+    $CCprovider = $_POST['ccProvider'];
+    $CCNumber = $_POST['ccNumber'];
     $burgers = $_POST['burgers'];
     $userID = (int) $userID;
 
