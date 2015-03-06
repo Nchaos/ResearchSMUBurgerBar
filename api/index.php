@@ -240,7 +240,7 @@ $app->post('/loginUser', function () {
 			'user_id'=>NULL,
 			'fName'=>NULL,
 			'lName'=>NULL,
-			'CCnum'=>NULL,
+			'CCNumber'=>NULL,
 			'CCprovider'=>NULL);
 		echo json_encode($JSONarray);
 	}
@@ -255,7 +255,7 @@ $app->post('/loginUser', function () {
 				'user_id'=>NULL,
 				'fName'=>NULL,
 				'lName'=>NULL,
-				'CCnum'=>NULL,
+				'CCNumber'=>NULL,
 				'CCprovider'=>NULL);
 			echo json_encode($JSONarray);
 		} 
@@ -277,7 +277,7 @@ $app->post('/loginUser', function () {
 				'user_id'=>$iteration['idUser'],
 				'fName'=>$iteration['fName'],
 				'lName'=>$iteration['lName'],
-				'CCnum'=>$iteration['ccNumber'],
+				'CCNumber'=>$iteration['ccNumber'],
 				'CCprovider'=>$iteration['ccProvider']);
 			
 		 	echo json_encode($JSONarray); 
@@ -289,7 +289,7 @@ $app->post('/loginUser', function () {
 				'user_id'=>NULL,
 				'fName'=>NULL,
 				'lName'=>NULL,
-				'CCnum'=>NULL,
+				'CCNumber'=>NULL,
 				'CCprovider'=>NULL);
 			echo json_encode($JSONarray);
 		}
