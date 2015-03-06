@@ -97,7 +97,7 @@ $app->get('/getToppings', function () {
 				"price": 1
 			},
 			{
-                "name": "Red onion",
+                "name": "Red Onion",
                 "price": 0
             },
             {
@@ -139,15 +139,15 @@ $app->get('/getSauces', function () {
 $app->get('/getSides', function () {
     $sides =  '{"sides": [
             {
-                "name": "French fries",
+                "name": "French Fries",
                 "price": 1
             },
             {
-                "name": "Tater tots",
+                "name": "Tater Tots",
                 "price": 1
             },
             {
-                "name": "Onion rings",
+                "name": "Onion Rings",
                 "price": 1
             }
         ]}';
