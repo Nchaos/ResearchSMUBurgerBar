@@ -230,86 +230,77 @@ $app->post('/loginUser', function () {
     $email = $_POST['email'];
     $password = $_POST['password'];
     try {
-    $sql = "SELECT idUser FROM User WHERE email=(?)";
-    $stmt = $mysqli -> prepare($sql);
-    $stmt -> bind_param('s', $email);
-    $stmt -> execute();
-    $username_test = $stmt -> fetch();
-    if(($username_test === NULL)) {
-        $JSONarray = array(
-            'status'=>'Failure', 
-            'user_id'=>NULL,
-            'fName'=>NULL,
-            'lName'=>NULL,
-            'email'=>NULL);
-        echo json_encode($JSONarray);
-        return;
-    }
-    else{
-        $stmt->close();
-        $sql = "SELECT password FROM User WHERE email=(?)";
-        $stmt1 = $mysqli -> prepare($sql);
-        $stmt1 -> bind_param('s', $email);
-        $stmt1 -> execute();
-        $passwordVal = '';
-        $stmt1->bind_result($passwordVal);
-        $stmt1 -> fetch();
-       
-        if($passwordVal === NULL) {
-            $JSONarray = array(
-            'status'=>'Failure', 
-            'user_id'=>NULL,
-            'fName'=>NULL,
-            'lName'=>NULL,
-            'email'=>NULL);
-            echo json_encode($JSONarray);
-            return;
-        } 
-    
-        else if($password == $passwordVal) { 
-            $stmt1->close();              
-            $_SESSION['loggedin'] = true;
-            $query = "SELECT idUser FROM User WHERE email=(?)";
-            $stmt2 = $mysqli -> prepare($query);
-            $stmt2 -> bind_param('s', $email);
-            $stmt2 -> execute();
-            $stmt2->bind_result($temp);         
-            $stmt2 -> fetch();    
-            $_SESSION['userId'] = $temp;
-            $_SESSION['email'] = $email;    
-            $statusFlg = 'Succeed';
-            $stmt2->close();
-            $components = "SELECT * FROM User WHERE email='$email'";
-            $returnValue = $mysqli -> query($components);
-            $iteration = $returnValue -> fetch_assoc();
-            $JSONarray = array(
-                'status'=>$statusFlg,
-                'user_id'=>$iteration['idUser'],
-                'firstName'=>$iteration['firstName'],
-                'lastName'=>$iteration['lastName'],
-                'email'=>$iteration['email']);
-            echo json_encode($JSONarray);
-            return;
-        } 
-        //verifies password
-        else {
-            $JSONarray = array(
-                'status'=>'Failure', 
-                'user_id'=>NULL,
-                'fName'=>NULL,
-                'lName'=>NULL,
-                'email'=>NULL);
-            echo json_encode($JSONarray);
-            return;
-        }
-    }
-    //returns null when password is wrong
+	$sql = "SELECT idUser FROM User WHERE email='$email'";
+	$stmt = $mysqli -> query($sql);			
+	$username_test = $stmt -> fetch_assoc();
+		
+	if(($username_test === NULL)) {
+		$JSONarray = array(
+			'status'=>'Failure', 
+			'user_id'=>NULL,
+			'fName'=>NULL,
+			'lName'=>NULL,
+			'CCnum'=>NULL,
+			'CCprovider'=>NULL);
+		echo json_encode($JSONarray);
+	}
+	else{
+		$sql = "SELECT password FROM User WHERE email='$email'";
+		$stmt = $mysqli -> query($sql);
+		$hashedPassword = $stmt -> fetch_assoc();		
+		$hashedPassword = $hashedPassword['password'];
+		if($hashedPassword === NULL) {
+		        $JSONarray = array(
+				'status'=>'Failure', 
+				'user_id'=>NULL,
+				'fName'=>NULL,
+				'lName'=>NULL,
+				'CCnum'=>NULL,
+				'CCprovider'=>NULL);
+			echo json_encode($JSONarray);
+		} 
+	
+		else if($password === $hashedPassword) {				
+			$_SESSION['loggedin'] = true;
+			$query = "SELECT idUser FROM User WHERE email='$email'";
+			$stmt2 = $mysqli -> query($query);			
+			$temp = $stmt2 -> fetch_assoc();	
+			$_SESSION['userId'] = $temp['idUser'];
+			$_SESSION['email'] = $email;	
+			$statusFlg = 'Succeed';
+	
+			$components = "SELECT * FROM User WHERE email='$email'";
+			$returnValue = $mysqli -> query($components);
+			$iteration = $returnValue -> fetch_assoc();
+			$JSONarray = array(
+				'status'=>$statusFlg,
+				'user_id'=>$iteration['idUser'],
+				'fName'=>$iteration['fName'],
+				'lName'=>$iteration['lName'],
+				'CCnum'=>$iteration['ccNumber'],
+				'CCprovider'=>$iteration['ccProvider']);
+			
+		 	echo json_encode($JSONarray); 
+		} 
+		//verifies password
+		else {
+			$JSONarray = array(
+				'status'=>'Failure', 
+				'user_id'=>NULL,
+				'fName'=>NULL,
+				'lName'=>NULL,
+				'CCnum'=>NULL,
+				'CCprovider'=>NULL);
+			echo json_encode($JSONarray);
+		}
+	}
+	//returns null when password is wrong
         $mysqli = null;
     } catch(exception $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}'; 
     }
-    echo "Finish5";
 });
+
 $app->post('/logout', function()  { 
     session_start();
     $_SESSION = array(); 
