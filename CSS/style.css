@@ -10,7 +10,7 @@ and open the template in the editor.
 #logo{
     max-width:200px; 
     max-height:200px;
-    background-color: white;
+    background-color: blue;
 }
 
 h1{
@@ -132,7 +132,7 @@ body{
 } 
 
 .userForm{
-    margin-top: 20%;
+    margin-top: 10%;
     padding:20px;
     position: absolute;
     margin-top: -20px;
