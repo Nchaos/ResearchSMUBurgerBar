@@ -168,7 +168,7 @@ document.getElementById('register').onclick = function() {
 document.getElementById('signInBttn').onclick = function() {
     form.action = '';
     form.submit();
-}
+
 
 //Login
 url = "./api/index.php/loginUser";
@@ -184,7 +184,7 @@ if(request.status === 200){
 document.cookie = "fName="+first;
 document.cookie = "lName="+last;
 
-
+}
 
 
 
