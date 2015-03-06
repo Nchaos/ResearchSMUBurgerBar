@@ -79,7 +79,7 @@ if(request.status === 200){
                 }
 		meatPrices.push(temp);
 	}
-	document.getElementById("meats").innerHTML = html;
+	document.getElementById(meats).innerHTML = html;
 }
 
 url = "./api/index.php/getBuns";
