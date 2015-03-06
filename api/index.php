@@ -225,11 +225,104 @@ $app->post('/createUserAccount', function () {
 });
 
 $app->post('/loginUser', function () {
-    $dummyJSON = array ('status'=>"Success", "idUser"=>1,"fName"=>"Austin","lName"=>"Wells","ccNumber"=>1234,"ccProvider"=>"Visa");
+    session_start();
+    global $mysqli;
     $email = $_POST['email'];
     $password = $_POST['password'];
-    echo json_encode($dummyJSON);
+    try {
+    $sql = "SELECT idUser FROM User WHERE email=(?)";
+    $stmt = $mysqli -> prepare($sql);
+    $stmt -> bind_param('s', $email);
+    $stmt -> execute();
+    $username_test = $stmt -> fetch();
+    if(($username_test === NULL)) {
+        $JSONarray = array(
+            'status'=>'Failure', 
+            'user_id'=>NULL,
+            'fName'=>NULL,
+            'lName'=>NULL,
+            'email'=>NULL);
+        echo json_encode($JSONarray);
+        return;
+    }
+    else{
+        $stmt->close();
+        $sql = "SELECT password FROM User WHERE email=(?)";
+        $stmt1 = $mysqli -> prepare($sql);
+        $stmt1 -> bind_param('s', $email);
+        $stmt1 -> execute();
+        $passwordVal = '';
+        $stmt1->bind_result($passwordVal);
+        $stmt1 -> fetch();
+       
+        if($passwordVal === NULL) {
+            $JSONarray = array(
+            'status'=>'Failure', 
+            'user_id'=>NULL,
+            'fName'=>NULL,
+            'lName'=>NULL,
+            'email'=>NULL);
+            echo json_encode($JSONarray);
+            return;
+        } 
+    
+        else if($password == $passwordVal) { 
+            $stmt1->close();              
+            $_SESSION['loggedin'] = true;
+            $query = "SELECT idUser FROM User WHERE email=(?)";
+            $stmt2 = $mysqli -> prepare($query);
+            $stmt2 -> bind_param('s', $email);
+            $stmt2 -> execute();
+            $stmt2->bind_result($temp);         
+            $stmt2 -> fetch();    
+            $_SESSION['userId'] = $temp;
+            $_SESSION['email'] = $email;    
+            $statusFlg = 'Succeed';
+            $stmt2->close();
+            $components = "SELECT * FROM User WHERE email='$email'";
+            $returnValue = $mysqli -> query($components);
+            $iteration = $returnValue -> fetch_assoc();
+            $JSONarray = array(
+                'status'=>$statusFlg,
+                'user_id'=>$iteration['idUser'],
+                'firstName'=>$iteration['firstName'],
+                'lastName'=>$iteration['lastName'],
+                'email'=>$iteration['email']);
+            echo json_encode($JSONarray);
+            return;
+        } 
+        //verifies password
+        else {
+            $JSONarray = array(
+                'status'=>'Failure', 
+                'user_id'=>NULL,
+                'fName'=>NULL,
+                'lName'=>NULL,
+                'email'=>NULL);
+            echo json_encode($JSONarray);
+            return;
+        }
+    }
+    //returns null when password is wrong
+        $mysqli = null;
+    } catch(exception $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+    }
+    echo "Finish5";
 });
+$app->post('/logout', function()  { 
+    session_start();
+    $_SESSION = array(); 
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 800000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+});
+
 
 $app->post('/placeUserOrder', function () {
     global $mysqli;
