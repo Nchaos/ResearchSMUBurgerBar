@@ -210,13 +210,13 @@ $app->post('/createUserAccount', function () {
 		$row = $prevUser->fetch_assoc();
 		if($row === NULL){
 		    $outputJSON = array ('u_id'=>1);
-		    $CCNumber = (int) $CCNumber;
+		    //$CCNumber = (int) $CCNumber;
 		    $insertion = $mysqli->query("INSERT INTO User (idUser, fName, lName, email, password, ccProvider, ccNumber) VALUES (1, '$fName', '$lName', '$email', '$password', '$CCprovider', $CCNumber)");
 		}
 		else{
 		    $newID = $row['idUser']+1;
 		    $outputJSON = array ('u_id'=>$newID);
-		    $CCNumber = (int) $CCNumber;
+		    //$CCNumber = (int) $CCNumber;
 		    $insertion = $mysqli->query("INSERT INTO User (idUser, fName, lName, email, password, ccProvider, ccNumber) VALUES ($newID, '$fName', '$lName', '$email', '$password', '$CCprovider', $CCNumber)");
 		}
             }
