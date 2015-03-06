@@ -172,14 +172,14 @@ document.getElementById('signInBttn').onclick = function() {
 
 //Login
 url = "./api/index.php/loginUser";
-var email;
-var password;
+var first;
+var last;
 request.open('POST', url, false);
 request.send();
 if(request.status === 200){
     var json = JSON.parse(request.responseText);
-	first = json.email;
-	last = json.password;
+	first = json.first;
+	last = json.last;
 }
 document.cookie = "fName="+first;
 document.cookie = "lName="+last;
