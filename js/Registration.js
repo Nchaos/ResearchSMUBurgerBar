@@ -54,8 +54,8 @@ function signIn(){
             type: "POST",
             url: "api/Login",
             data: {
-                email: $("#signInEmail").val(),
-                password: $("#signInPass").val()
+                email: $("#email").val(),
+                password: $("#password").val()
             },
             success: function(json){
                 console.log(json);
